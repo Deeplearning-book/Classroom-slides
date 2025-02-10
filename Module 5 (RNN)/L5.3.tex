@@ -1,0 +1,75 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\title{5. Sequence modeling with recurrent neural networks}
+\subtitle{5.3. Deep Recurrent Neural Networks and Bidirectional Neural Networks}
+
+\addtobeamertemplate{frametitle}{}
+
+\begin{document}
+\maketitle
+
+\begin{frame}{Deep Recurrent Neural Networks}{Structure}
+\begin{center}
+\includegraphics[scale=0.23]{Module 5 (RNN)/pics/deep_rnn_rolled.pdf}
+\end{center}
+\begin{itemize}
+\item The deep RNN follows the same idea as the one in the MLP or CNN: construct a sequence of hidden states $\bh^{(l)}$, $1 \leq l \leq L$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Deep Recurrent Neural Networks}{Unrolled GRNN}
+\begin{center}
+\includegraphics[scale=0.4]{Module 5 (RNN)/pics/smaller_drnn_unrolled.pdf}
+\end{center}
+\begin{itemize}
+\item The GRNN can be represented in a compact, unrolled way.
+\end{itemize}
+\end{frame}
+\begin{frame}{Deep Recurrent Neural Networks}{Backpropagation}
+\begin{itemize}
+\item The DRNN has a training that is similar to the one of the standard RNN.
+\item The generalization of the training can be found by computing the gradient with respect to each hidden state $\bh^{(l)}_{t}$ and then the expression of the backpropagated error.  
+\item Each weight matrix $\bW_{hh}^{(l)}$ is trained with the product of the backpropagation error and its input $\bh^{(l-1)}_t$.
+\item The derivation is left as an exercise for the student.
+\end{itemize}
+\begin{center}
+\end{center}
+\end{frame}
+
+\begin{frame}{Bidirectional Recurrent Neural Networks}{Structure}
+
+\vspace{-0.5cm}
+
+\begin{center}
+\includegraphics[scale=0.3]{Module 5 (RNN)/pics/smaller_brnn_unrolled.pdf}
+\end{center}
+
+\begin{itemize}
+\item Bidirectional RNNs make sense when the prediction tasks can extract information of input patterns in both time directions. 
+\item A common example is the task of part of speech detection.
+\end{itemize}
+\begin{center}
+\end{center}
+\end{frame}
+
+\begin{frame}{Bidirectional Recurrent Neural Networks}{State equations}
+
+
+\begin{itemize}
+\item The BRNN has forward and backward state equations.
+\begin{equation}\label{eq:BRNN_recursion} 
+\begin{split}
+\bh_{t}&=\tanh\left( \bW_{hx}^\top\bx_{t} + \bW_{hh}^\top\bh_{t-1}+\bb_{h}   \right)\\
+\bh'_{t}&=\tanh\left( \bW_{h'x}^\top\bx_{t} + \bW_{h'h'}^\top\bh'_{t+1}+\bb_{h'}   \right)\\
+\end{split}
+\end{equation}
+\item And the output is computed as
+\begin{equation}\label{eq:BRNN_output} 
+{\bo_{t}}=\text{softmax}\left(\bW_{oh}^\top\bh_{t} +\bW_{oh'}^\top\bh'_{t} + \bb_{o}\right)
+\end{equation}
+\item The BRNN has also a training that is similar to the one of the standard RNN, so the derivation is left as an exercise for the student.
+\end{itemize}
+
+\end{frame}
+
+\end{document}

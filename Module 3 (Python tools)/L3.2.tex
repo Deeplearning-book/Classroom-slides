@@ -1,0 +1,189 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+
+\title{3. Deep learning tools}
+\subtitle{3.2 Numpy}
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Introduction}
+\begin{itemize}
+\item Standard package for scientific computing. 
+\item provides advanced mathematical computations and operations using multi-dimensional arrays and matrices. 
+\item The base variable is an multinimensional array (ndarray)
+\item This lesson summarizes array initialization,  types of operations, extracting shape, axis properties.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Arrays}
+The numpy array can be initialized with the command  \textbf{np.array}. The array has the following methods:
+\begin{itemize}
+    \item \textbf{array.shape}: This gives the shape of the array.
+\item \textbf{array.size} : This gives the total number of elements in an array.
+\item \textbf{array.ndim} : Number of axes in an array.
+\item \textbf{array.dtype}: Gives the datatype of elements in the array.
+\end{itemize}
+\begin{lstlisting}
+import numpy as np
+my_array = np.array([[1, 2, 3, 4],
+                     [5, 6, 7, 8]]) 
+#initializing a different data type array
+my_array.shape #Ouputs (2,4)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Predefined arrays}
+\begin{lstlisting}
+mat1 = np.zeros((5,4))      #matrix of zeros
+mat2 = np.ones((3,2))       #matrix of ones
+mat3 = np.empty((2,2))      #empty matrix
+mat4 = np.eye(3)            #3x3 identity matrix
+mat5 = np.full((3,3),2)     #matrix of 2's
+mat6 = np.arange(1,50,3)    #Sequence of integers
+mat7 = np.linspace(1,49,17) #The same sequence but with reals
+
+\end{lstlisting}
+Lines 5 and 6 generate a sequence of 17 numbers from 1 to 49.
+
+\end{frame}
+\begin{frame}[fragile]{Changing the shape}
+\begin{lstlisting}
+import numpy as np
+ar = np.array([[1,2],[3,4],[5,6],[7,8])
+print(ar)
+\end{lstlisting}
+\begin{tiny}
+\begin{verbatim}
+ [[1 2]
+  [3 4]
+  [5 6]
+  [7 8]]
+\end{verbatim}
+\end{tiny}
+\begin{lstlisting}
+ar1 = ar.reshape((2,4)) #modifying the shape
+print(ar1)
+\end{lstlisting}
+\begin{tiny}
+\begin{verbatim}
+[[1 2 3 4]
+[5 6 7 8]]
+\end{verbatim}
+\end{tiny}
+\begin{lstlisting}
+ar2=ar1.ravel()
+print(ar2)
+\end{lstlisting}
+\begin{tiny}
+\begin{verbatim}
+[1 2 3 4 5 6 7 8]
+\end{verbatim}
+\end{tiny}
+\end{frame}
+\begin{frame}[fragile]{Stacking and splitting}
+\begin{lstlisting}
+array1 = np.array([1,2,3,4]) # initializing two arrays
+array2 = np.array([5,6,7,8])
+ar_row = np.hstack((array1,array2)) # using hstack
+print(ar_row)
+\end{lstlisting}
+\begin{tiny}
+\begin{verbatim}
+    [1 2 3 4 5 6 7 8]
+\end{verbatim}
+\end{tiny}
+
+\begin{lstlisting}
+ar_column = np.column_stack((array1,array2)) # using column_stack
+print(ar_column)
+\end{lstlisting}
+
+\begin{tiny}
+\begin{verbatim}
+   [[1 5]
+    [2 6]
+    [3 7]
+    [4 8]]
+\end{verbatim}
+\end{tiny}
+\end{frame}
+
+\begin{frame}[fragile]{Stacking and splitting}
+
+\begin{lstlisting}
+print(np.hsplit(ar_row,2)) #splitting along column
+\end{lstlisting}
+
+
+
+\begin{tiny}
+\begin{verbatim}
+    [array([[1],
+           [2],
+           [3],
+           [4]]),
+    array([[5],
+           [6],
+           [7],
+           [8]])]
+\end{verbatim}
+\end{tiny}
+
+
+\begin{lstlisting}
+print(np.array_split(ar_row,2, axis = 0)) # along axis = 0
+\end{lstlisting}
+
+\begin{tiny}
+\begin{verbatim}
+    [array([[1, 5],
+           [2, 6]]), 
+     array([[3, 7],
+           [4, 8]])]
+\end{verbatim}
+\end{tiny}
+
+\end{frame}
+\begin{frame}[fragile]{Arithmetic operations}
+\begin{lstlisting}
+a = np.array([1,2,3,4])     #creating arrays a and b
+b = np.array([4.,5.,1.,2.]) #b contains reals
+add_ab = np.add(a,b)        #addition 
+rec_b = np.reciprocal(b)    #reciprocal of array b (inverse)
+pow_ab = np.power(a,b)      #power of a to b
+sqrt_a = np.sqrt(a)         #square root of a
+\end{lstlisting}
+\begin{lstlisting}
+zip_obj = zip(a, b)         #create a list of tuples
+comp = []                   #create an empty list
+for x,y in zip_obj:         #obtain each element zup_obj
+    c = complex(x,y)        #compute x+jy  
+    comp.append(c)          #append these to the empty list
+print(list(comp))              # printing complex array
+print(list(np.real(comp)))     # getting the real part
+print(list(np.imag(comp)))     # getting imag part 
+\end{lstlisting}
+\begin{tiny}
+\begin{verbatim}
+    [(1+4j), (2+5j), (3+1j), (4+2j)]
+    [1.0, 2.0, 3.0, 4.0]
+    [4.0, 5.0, 1.0, 2.0]
+\end{verbatim}
+\end{tiny}
+\end{frame}
+\begin{frame}[fragile]{Mathematical functions}
+\begin{lstlisting}
+a = np.array([30,45,60,90])   #an array of degrees
+print(np.sin(np.radians(a)))  #convert to rads, print its sine
+b = np.array([0.35066070245,2.67822320434]) #an array of ints
+print(np.around(b, 4)) #print their round to the 4th decimal
+print(np.floor(b))     # use floor command
+print(np.ceil(b))      # use ceil command
+\end{lstlisting}
+\end{frame}
+\end{document}	

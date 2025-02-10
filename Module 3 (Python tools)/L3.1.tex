@@ -1,0 +1,166 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+ 
+\title{3. Deep learning tools}
+\subtitle{3.1 Phython: an overview}
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Introduction}
+\begin{multicols}{2}
+\begin{itemize}
+    \item First released in 1991. 
+    \item Syntax designed for code readability.
+    \item Extendable: Interacts with C/C++.
+    \item Large range if libraries. Compatible with all OS. 
+   
+\end{itemize}
+\columnbreak
+\includegraphics[scale=0.3]{Module 3 (Python tools)/pics/python.png} 
+\begin{itemize}
+\item Downloads and tutorials in python.org.
+\end{itemize}
+\end{multicols}
+\end{frame}
+
+
+\begin{frame}[fragile]{Variables}
+\begin{itemize}
+    \item Lists and tuples: 
+\begin{lstlisting}
+#this is a list
+list=[2,4,'hello',3]
+#this is a tuple
+tuple=(2,4,'hello',3)
+\end{lstlisting}
+
+\item Strings, and sets:  
+    
+\begin{lstlisting}
+#this is a string 
+string='hello'
+#This is a proper set
+set={0,1, (2,4,'hello',3)}
+#This set will not work
+set={0,1, [2,4,'hello',3]}
+\end{lstlisting}
+\item Tuples and sets are immutable, so they cannot contain lists.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Variables}
+\begin{itemize}
+\item Collection of elements represented as key-value pairs. Keys are immutable data types.
+
+\begin{lstlisting}
+diction = {'number':23, 'name':'Tom','age': 16} 
+#defining a dictionary
+the_diction = {} #empty dictionary
+\end{lstlisting}
+
+\item To access each element of a dictionary, the keys are used along with the square brackets.
+
+\begin{lstlisting}
+print(diction['age']) #output is 16.
+diction['name'] = 'Harry'
+print(diction)
+#outputs is {'number':23,'name':'Harry','age': 16}
+del diction['age']
+print(diction) #outputs is {'number':23,'name':'Harry'}.
+print(diction.pop('name')) 
+#outputs 'Harry' and removes it from the dictionary.
+
+\end{lstlisting}
+\end{itemize}
+    
+\end{frame}
+
+
+\begin{frame}[fragile]{Conditional Statements}
+
+\begin{lstlisting}{}
+
+a = 1
+if a == 2:
+   print('Even prime number')
+elif a == 3:
+    print('Odd prime number')
+else:
+   print('Neither prime nor composite number')
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Loops}
+
+\begin{lstlisting}
+for j in range(6,10):
+     print(j) #outputs the numbers 6,7,8 and 9.
+\end{lstlisting}
+
+
+\begin{lstlisting}
+num = [2,4,6,8,10]
+for i in num:
+   if i == 6:
+       break
+    print(i) #outputs numbers 2 and 4.
+\end{lstlisting}
+
+\begin{lstlisting}{}
+seq = ['h','e','l','l','o']
+for j in seq:
+     print(j, end = '')
+#prints "hello"
+#command "pass" is used as a placeholder for future code.
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{Functions}
+Functions are the basic way to write reusable code.
+\begin{lstlisting}
+def addition(a,b): #function name and parameters.
+     out = a+b #function body.
+     return  out  #return value of the function.
+#Here the function definition ends.
+#Note the indentation change from next line.
+a = 10
+b = 40
+out = addition(a,b)
+print(out) #outputs the number 50. 
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{Objects and classes}
+
+\begin{lstlisting}{}
+class Smartphone: #Defining the object.
+ def __init__(self, brand,storage):
+  self.brand=brand \#Defines the object properties.
+  self.storage=storage 
+ def capacity(self): \#Defining the object behaviour.
+  if self.storage >= 512:
+   return 'Large Storage'
+  elif (self.storage < 512) & (self.storage > 128):
+   return 'Average Storage'
+  else:
+   return 'Low Storage'
+
+phone1 = Smartphone('EyePhone',256)
+space = phone1.capacity()
+print(phone1.brand) #outputs 'EyePhone'.
+print(phone1.storage) #outputs 256.
+print(phone1.brand, ":",space) 
+#outputs EyePhone : Average Storage.
+\end{lstlisting}
+\end{frame}
+
+
+\end{document}	

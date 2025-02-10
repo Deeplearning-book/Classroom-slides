@@ -1,0 +1,166 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+
+\title{3. Deep Learning tools}
+\subtitle{3.5 Scikit-learn}
+
+\addtobeamertemplate{frametitle}{}
+
+\begin{document}
+
+\maketitle
+\begin{frame}{Introduction}
+   \begin{itemize}  
+   \item Scikit-learn is a free machine learning library in Python developed  by David Cournapeau as a Google Summer of Code project in 2007.
+   \item It has various features for pre-processing, model selection, classification, clustering, regression and dimensionality reduction. 
+   \item It is built on top of NumPy, SciPy and Matplotlib. 
+   \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{The Scikit-Learn API}
+
+\begin{itemize}
+\item The API has three interfaces that do most of the ML tasks. It also has pre-built algorithms. 
+ 
+\begin{itemize}
+ \item[]\textbf{Estimator:}  It uses the \emph{fit()} method to train the machine learning model. All regression, classification or unsupervised tasks use the estimator interface.
+ 
+ \item[]\textbf{Predictor} It uses
+the \emph{predict()} method to make  predictions on test features. A single \emph{fit\_predict()} method can be used.
+ 
+ \item[]\textbf{Transformer} The \emph{transform()} method provides a library of transformations for data preprocessing, dimensionality reduction, feature extraction, and feature selection. The \emph{fit\_transform()} models and transforms the training data simultaneously.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Datasets}
+\begin{itemize}
+    \item Toy examples, real data and data generators can be used with the library.
+    \item Here are some examples:
+\end{itemize}
+
+\begin{lstlisting}
+#LOADING THE TOY DATSET
+from sklearn import datasets
+data = datasets.load_wine() #Load the wine dataset.
+#LOADING REAL-WORLD DATASET
+from sklearn.datasets import fetch_california_housing
+house_data = fetch_california_housing() # A housing dataset.
+
+#LOADING GENERATED DATASET
+from sklearn.datasets import make_blobs
+#Develop isotropic Gaussian blobs for clustering.
+X, y = make_blobs(n_samples=60, centers=3, n_features=3, random_state=0) 
+
+\end{lstlisting}
+
+\begin{verbatim}
+\end{verbatim}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Making blobs}
+\begin{lstlisting}
+from sklearn.datasets import make_blobs
+X, y = make_blobs(n_samples=200, centers=3, n_features=2, random_state=0) 
+\end{lstlisting}
+
+\begin{multicols}{2}
+
+\begin{lstlisting}
+string=['*r','+k','ob']
+for j in range(3):
+  ind = np.where(y==j)
+  plt.plot(X[ind,0],X[ind,1],string[j])
+plt.show()
+\end{lstlisting}
+
+\includegraphics[scale=0.45]{Module 2 (Python tools)/pics/blobs.png}
+
+\end{multicols}
+
+\end{frame}
+
+\begin{frame}{Preprocessing}
+
+
+
+\begin{table}[H]
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Methods}} & \multicolumn{1}{c|}{\textbf{Functions}}                                                                                                                                                                                                             \\ \hline
+Standardization                                      & \begin{tabular}[c]{@{}l@{}}StandardScaler()-Zero mean, unit var.\\ MinMaxScaler()- Between $a$ and $b$.\end{tabular}                                                      \\ \hline
+Normalization                                        & \begin{tabular}[c]{@{}l@{}}Normalizer()-unit norm.\end{tabular}                                                                                                                                                \\ \hline
+Imputing values                                      & \begin{tabular}[c]{@{}l@{}}SimpleImputer()-  Fills up missing values \\ Mean, most frequent, median,  constant.\end{tabular}                                                                           \\ \hline
+Polynomial Features                                  & \begin{tabular}[c]{@{}l@{}}PolynomialFeatures()- Adds complexity\\ by generating polynomial features.\end{tabular}                                                                                                                  \\ \hline
+Categorical Features                                 & \begin{tabular}[c]{@{}l@{}}OneHotEncoder()- Categorical encoding.\\  OrdinalEncoding()- Encodes unique cats.\\  \end{tabular} \\ \hline
+Numerical Features                                   & \begin{tabular}[c]{@{}l@{}}KBinsDiscretizer()- Real to discrete bins.\\ Binarizer()- Thresholds numerical features.\end{tabular}                     \\ \hline
+Custom Transformers                                  & \begin{tabular}[c]{@{}l@{}}FunctionTransformers()- Accepts an existing \\ function and uses it to transform the data.\end{tabular}                                                                                                                  \\ \hline
+\end{tabular}
+\caption{Data preprocessing methods and functions}
+\label{table:1}
+\end{table}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Preprocessing}
+\begin{itemize}
+    \item A preprocessing example that does data imputation
+\end{itemize}
+
+\begin{lstlisting}
+#IMPUTING VALUES
+import numpy as np
+from sklearn.impute import SimpleImputer
+arr3 = np.array([[np.nan, 2, 8, np.nan], [6, np.nan, np.nan, 12], [7, 6, 4, np.nan]]) #define an array.
+print("Original array:",arr3)
+im = SimpleImputer(missing_values=np.nan, strategy='median') #define the preprocessing module.
+arr_im = im.fit_transform(arr3) #fills the missing data.
+print("Array after imputing values:",arr_im)
+\end{lstlisting}
+\begin{small}
+\begin{verbatim}
+Original array: [[nan  2.  8. nan]
+ [ 6. nan nan 12.]
+ [ 7.  6.  4. nan]]
+Array after imputing values: [[ 6.5  2.   8.  12. ]
+ [ 6.   4.   6.  12. ]
+ [ 7.   6.   4.  12. ]]
+\end{verbatim}
+\end{small}
+\end{frame}
+
+\begin{frame}[fragile]{Feature selection and machine learning}
+\begin{itemize}
+    \item \textbf{Feature selection:} Scikit-learn provides several feature selection algorithms. The most widely used methods are Recursive Feature Elimination (RFE) and SelectKBest. 
+    \item \textbf{Learning models:} 
+    \begin{itemize}
+\item \textbf{Supervised:} The most commonly used supervised learning method includes linear models such as Linear regression, Logistic regression, Ridge regression, Lasso regression , Decision trees, Naive Bayes Classifier, Support Vector Machines, Random Forests, and others;  
+\item \textbf{Unsupervised:} Isomap, t-SNE,  K-Means, Gaussian Mixture Models. 
+\end{itemize}
+\item Examples are provided in separate Jupyter notebooks.
+\end{itemize}
+\end{frame}
+
+\end{document}	
+
+
+
+
+
+\begin{frame}[fragile]{}
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{verbatim}
+\end{verbatim}
+\end{frame}

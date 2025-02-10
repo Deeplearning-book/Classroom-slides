@@ -1,0 +1,81 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\title{5. Sequence modeling with recurrent neural networks}
+\subtitle{5.5. Gated Recurrent Units}
+
+\addtobeamertemplate{frametitle}{}
+
+\begin{document}
+\maketitle
+
+\begin{frame}{Introduction}
+\begin{itemize} 
+\item The LSTM architecture was successful by avoiding the unwanted Elman's RNN phenomena. 
+\item After its inception, a number of authors published attempts to simplify this structure. 
+\item The Gated Recurrent Unit (GRU) was introduced in 2014 by K. Cho, K. et al (including Yoshua Bengio) whose performance is similar to the one of the LSTM, but with less computational time. 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Structure}{Reset and update gates $\br_t$  and $\bu_t$}
+\begin{center}
+    \includegraphics[scale=0.4]{Module 5 (RNN)/pics/GRU_reset_update.pdf}
+\end{center}
+
+\begin{itemize} 
+\item The reset gate $\br_t$ has the role of the forgetting gate in an LSTM. It modulates how much of the previous state is passed. 
+\item The update gate $\bu_t$ is used to update the previous state modulated by $\br_t$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Structure}{Candidate hidden state $\tilde{\bh_t}$}
+\begin{center}
+    \includegraphics[scale=0.4]{Module 5 (RNN)/pics/GRU_candidate_hidden_state.pdf}
+\end{center}
+
+\begin{itemize} 
+\item The combination of the current input $\bx_t$ and the previous modulated state $\br_t \odot \bh_{t-1}$ is  used to estimate a new candidate $\tilde{\bh}_t$ for the new hidden state.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Structure}{New hidden state $\bh_t$}
+\begin{center}
+    \includegraphics[scale=0.4]{Module 5 (RNN)/pics/gate_recurrent_unit.pdf}
+\end{center}
+
+\begin{itemize} 
+\item The new state $\bh_t$ is a combination of the previous state and the new candidate $\tilde{\bh}_t$. Note the unit gain feedback. 
+\begin{equation}
+    \bh_t = \bu_t \odot \bh_{t-1} + \left({\bf 1} - \bu_t \right) \odot \tilde{\bh}_t
+\end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Structure}{GRU equations $\bh_t$}
+\begin{center}
+    \includegraphics[scale=0.4]{Module 5 (RNN)/pics/gate_recurrent_unit.pdf}
+\end{center}
+
+\vspace{-0.8cm}
+
+\begin{equation}
+\begin{array}{ll}
+    \begin{split}
+    \br_t  =& \bsigma\left(\bW_{xr}^\top \bx_t + \bW_{hr}^\top \bh_{t-1} +\bb_r\right) \\
+    &
+    \end{split}
+    &  
+    \begin{split}
+    \tilde{\bh}_t   = \bsigma\big(&\bW_{xh}^\top \bx_t + \bW_{hh}^\top \left(\br_t \odot \bh_{t-1}\right)\\
+    &+\bb_h\big)
+    \end{split}
+    \\
+    \bu_t  =\bsigma\left(\bW_{ur}^\top \bx_t + \bW_{ur}^\top \bh_{t-1} +\bb_u\right) &
+    \bh_t  = \bu_t \odot \bh_{t-1} + \left({\bf 1} - \bu_t \right) \odot \tilde{\bh}_t\\
+\end{array}
+\end{equation}
+
+
+\end{frame}
+
+\end{document}

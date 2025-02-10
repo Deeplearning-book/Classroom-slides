@@ -1,0 +1,124 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\usepackage{algorithm,algorithmic}
+\usepackage[algo2e]{algorithm2e} 
+%\title{Lesson 1.1}
+\title{2. Training practicalities}
+\subtitle{}
+
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Generalization and overfitting}
+\begin{itemize}
+    \item Purpose of training:  achieve the best possible test accuracy. 
+    \item the training dataset must contain enough information about its structure.\item This is compromised as the number of samples decrease. 
+    \item The difference between the training and test errors in a neural network with sufficient complexity is called \emph{overfitting}. 
+    \item The ability to obtain a sufficiently low error both in training and test is called \emph{generalization} ability.   
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Example of overfitting}
+    \begin{center}
+    \includegraphics[scale=0.39]{Module 1 (NN)/pics/example_161_5_.pdf} \includegraphics[scale=0.39]{Module 1 (NN)/pics/example_161_20_.pdf}
+    \end{center}
+\begin{itemize}
+\item A classifier is trained with only the 10 samples highligthed as squares and dots (left). 
+\item The resulting classifier is depicted as a solid line which is clearly biased with respect to the optimum.
+\item As the number of training data increases, the classifier gets closer to the optimum (right).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Learning curve}
+
+\begin{center}
+    \includegraphics[scale=0.38]{Module 1 (NN)/pics/example_161_train_test_error100_.pdf}
+    \end{center}
+    
+    Test error rate (continuous line) and train error rate (dashed line) as a function of the number of training samples for the previous  example.
+\end{frame}
+
+\begin{frame}{Parameter regularization}{Ridge regularization}
+\begin{itemize}
+    \item To reduce the overfitting we must increase the number of data. But this is impossible in almost all practical cases.
+    \item The use of the $L_2$ or \emph{ridge regularization} is used to produce solutions with low parameter norm
+    
+    \begin{equation}\label{eq:reg_cross_entropy}
+J(\boldsymbol \theta) = J_{ML}(\boldsymbol \theta) + \frac{\lambda}{2} \sum_{l} ||{\bf W}^{(l)}||_F^2
+\end{equation}
+where $\|\cdot \|^2_F$ is the Frobenius norm.
+  
+        \item Basic idea: emphasize the important nodes by decreasing the rest.
+        \item This way we have \emph{simpler} solutions.
+\item The gradient of the regularization is $\lambda \bW^{(l)}$, so at each iteration we decrease each parameter an equal \emph{fraction of its value}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Parameter regularization}{Lasso}
+\begin{itemize}
+    \item A different way to simplify the solution is to apply the $L_1$ or ``least absolute shrinkage and selection operator'' (lasso).
+    
+     \begin{equation}\label{eq:reg_cross_entropy}
+J(\boldsymbol \theta) = J_{ML}(\boldsymbol \theta) + \lambda \sum_{l} ||{\bf W}^{(l)}||_1
+\end{equation}
+where $\|\cdot \|_1$ returns the absolute value of the elements of the matrix.  
+
+\item The gradient of the regularization is simply $sign\left(\bW^{(l)}\right)$. At each iteration, all parameters are decreased an \emph{equal quantity} if they are not zero. 
+\item This regularization sets some parameters to zero, and thus it \emph{selects} connections.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Parameter regularization} {Elastic net}
+\begin{itemize}
+    \item Lasso regularization drops correlated variables, while ridge regression combines them to minimize the noise or uncertainty in their values. 
+    \item An intermediate solution is to combine both
+    
+     \begin{equation}\label{eq:reg_cross_entropy}
+J(\boldsymbol \theta) = J_{ML}(\boldsymbol \theta) + \lambda \left(  (1-\alpha)\sum_{l} ||{\bf W}^{(l)}||_F^2+ \alpha \sum_{l} ||{\bf W}^{(l)}||_1 \right)
+\end{equation}
+where $0 \leq \alpha \leq 1$.    
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Parameter regularization}{Comparisons}
+\begin{center}
+\includegraphics[scale=0.2]{Module 1 (NN)/pics/regularization_comparisons.png}
+\end{center}
+Constraint balls for ridge, lasso, and elastic-net. The sharp edges and corners of the latter two allow for  selection and shrinkage$^1$.
+
+\vspace{1cm}
+
+$^1$\footnotesize{Trevor Hastie, Technometrics 62.4 (2020), pp. 426-433.}. 
+\end{frame}
+\begin{frame}{Weight initializations}
+\begin{itemize}
+
+\item The convergence of a NN depends on a proper initialization.  
+
+\item Xavier initialization:
+\begin{itemize}
+    \item   Xavier Glorot and Yoshua Bengio proposed$^1$ a Gaussian random initialization for sigmoidal activations with std  $\sigma =\frac{1}{\sqrt{D_{l-1}}}$
+    \item Good results in neural networks with logistic and tanh activations.
+    \item Many effects not understood. 
+\end{itemize}  
+\item He activation:
+\begin{itemize}
+\item He et al.$^2$ show that Xavier does not work well when hidden activations are ReLU. 
+\item They proposed a standard deviation $\sigma =\sqrt{\frac{2}{{D_{l-1}}}}$. 
+\end{itemize}
+\end{itemize}
+$^1$\footnotesize{Xavier Glorot and Yoshua Bengio. Proceeding sot the JMLR, 2010, pp. 249-256.}
+
+
+
+$^2$\footnotesize{Kaiming He et al.  Proceedings of the IEEE ICCV, 2015, pp. 1026-1034.}
+
+\end{frame}
+
+\end{document}

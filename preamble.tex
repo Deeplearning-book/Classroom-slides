@@ -1,0 +1,145 @@
+\input{commands}
+\usetheme{Madrid}
+\usecolortheme{beaver}
+\usepackage{tikz}
+\usetikzlibrary{fit,arrows,calc,positioning}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{emerald} 
+\usepackage[T1]{fontenc} 
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{psfrag}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage{color}
+ \usepackage{vwcol} 
+ \usepackage[english]{babel} % To obtain English text with the blindtext package
+\usepackage{blindtext}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+\lstset{style=mystyle}
+
+%% Stuff for movies
+
+% %\newcommand{\bt}{{\bf t}}
+% \newcommand{\br}{{\bf r}}
+% \newcommand{\bs}{{\bf s}}
+% \newcommand{\by}{{\bf y}}
+% \newcommand{\bz}{{\bf z}}
+% \newcommand{\bx}{{\bf x}}
+% \newcommand{\bw}{{\bf w}}
+% \newcommand{\be}{{\bf e}}
+% \newcommand{\bbf}{{\bf f}}
+% \newcommand{\bb}{{\bf b}}
+% \newcommand{\bd}{{\bf d}}
+% \newcommand{\bA}{{\bf A}}
+% \newcommand{\bB}{{\bf B}}
+% \newcommand{\bL}{{\bf L}}
+% \newcommand{\bM}{{\bf M}}
+
+% \newcommand{\bC}{{\bf C}}
+% \newcommand{\bI}{{\bf I}}
+% \newcommand{\bK}{{\bf K}}
+% \newcommand{\bk}{{\bf k}}
+% \newcommand{\bT}{{\bf T}}
+% \newcommand{\bV}{{\bf V}}
+% \newcommand{\bW}{{\bf W}}
+% \newcommand{\bX}{{\bf X}}
+% \newcommand{\bY}{{\bf Y}}
+% \newcommand{\bZ}{{\bf Z}}
+% \newcommand{\bm}{{\bf m}}
+% \newcommand{\bpt}{{\bf pt}}
+% \newcommand{\bpl}{{\bf pl}}
+% \newcommand{\bdp}{{\bf dp}}
+% \newcommand{\btemp}{{\bf temp}}
+% \newcommand{\bl}{{\bf l}}
+% \newcommand{\bu}{{\bf u}}
+% \newcommand{\bmu}{{\boldsymbol \mu}}
+% \newcommand{\bSigma}{{\boldsymbol \Sigma}}
+% \newcommand{\bLambda}{{\boldsymbol \Lambda}}
+
+% \newcommand{\bsigma}{{\boldsymbol \sigma}}
+% \newcommand{\bvarphi}{{\boldsymbol \varPhi}}
+% \newcommand{\btheta}{{\boldsymbol \theta}}
+% \newcommand{\bZero}{{\bf 0}}
+% \newcommand{\balpha}{{\boldsymbol \alpha}}
+% \newcommand{\bpi}{{\boldsymbol \pi}}
+% \newcommand{\bxi}{{\boldsymbol \xi}}
+% \newcommand{\bdelta}{{\boldsymbol \delta}}
+\lstset{
+	language=Python,
+	basicstyle=\footnotesize\ttfamily\color{black},
+	commentstyle = \footnotesize\ttfamily\color{red},
+	keywordstyle=\footnotesize\ttfamily\color{blue},
+	stringstyle=\footnotesize\ttfamily\color{black},
+%	columns=fixed,
+%	numbers=left,    
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=5pt,
+	tabsize=1,
+	extendedchars=true,
+	breaklines=true,            
+	frame=b,         
+	showspaces=false,
+	showtabs=true,
+	xleftmargin=6pt,
+	framexleftmargin=6pt,
+	framexrightmargin=2pt,
+	framexbottommargin=4pt,
+	showstringspaces=false      
+}
+
+\lstloadlanguages{
+         Python
+}
+
+%\graphicspath{ {./images/} }  % Figures path - used in graphicx
+
+%\selectcolormodel{cmyk}
+
+\mode<presentation>
+
+\newcommand{\dred}{darkred!90!black}
+\newcommand{\written}{\ECFJD\textcolor{cyan!50!white}}
+\newcommand{\hlight}{\textcolor{\dred}}
+\newcommand{\Ex}{\textcolor{\dred}{Ex. }}
+
+% remove navigation symbols in full screen mode
+\setbeamertemplate{navigation symbols}{}  
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamercolor{note page}{fg=black}
+
+\setbeamercolor{title}{fg=\dred}
+\setbeamercolor{frametitle}{fg=white}
+\setbeamercolor{frametitle}{bg=\dred}
+\setbeamercolor{structure}{fg=black,bg=white}
+\setbeamercolor{background canvas}{bg=white,fg=black}
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{item}{fg=red!80!black,bg=white!}
+\addtobeamertemplate{block begin}{\setbeamercolor{block title}{fg=white,bg=\dred}
+\setbeamercolor{block body}{fg=white,bg=gray}}{}
+

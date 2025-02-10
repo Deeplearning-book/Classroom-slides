@@ -1,0 +1,148 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\title{6. Attention-based networks}
+\subtitle{6.3. Transformers for vision}
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Introduction}
+\begin{itemize}
+
+\item Transformers were initially developed for natural language processing (NLP), with impressive performance in machine translation and text generation.
+
+\item Also recently applied to computer vision tasks as image classification, object detection, semantic segmentation, and others.
+
+\item Transformers can potentially overcome some of the limitations of traditional CNNs, such as limited ability to handle long-range dependencies and global context.
+
+\item Recent advancements have paved the way for developing models that capture local and global features while handling large variations in object scales and spatial configurations.
+
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Introduction}
+
+    \begin{itemize}
+        \item Convolution can be replaced with self-attention
+        \item Self-attention can learn to behave similarly to convolution.
+        \item If no constraints in patch size are applied, vision transformers can extract patches from images and use to encode them. 
+        \item Transformers show better scalability than convolutions. 
+        \item They outperform ResNets. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Vision transformer}{Structure}
+\vspace{-0.6cm}
+\begin{center}
+    \includegraphics[scale=0.43]{Module 6 (Attention-based networks)/pics/vit.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}{Vision transformer}{Operation}
+
+\begin{itemize}
+\item Images as tokens:
+\begin{itemize}
+\item Input image with height $h$, width $w$, and $C$
+ channels. 
+ \item patch size with dimension $p$
+\item The image is split into a sequence of $m=hw/p^2$
+ flattened patches with length $Cp^2$
+ \item  A special <cls> (class) token.
+\end{itemize}
+
+\item Sequences are added to learnable positional encodings
+\item The transformer produces $m$  output vector representations of the same length. 
+
+\item The <cls> token attends to all the image patches via self-attention. Its representation from the Transformer encoder output is transformed into the output label.
+\end{itemize}   
+
+\end{frame}
+\begin{frame}{Vision transformer}{Operation}
+\begin{itemize}
+    \item The transformer consists of alternating multi-head attention and MLP blocks. 
+    \item The first layer is a 
+\begin{equation}
+   \bz_0 = \left[\bx_{class},  \bE\bx_1, \cdots, \bE\bx_n  \right] + \bE_{pos}
+\end{equation}
+where $\bx_n$ is a patch of the image, $\bE$ is an embedding matrix and $\bE_{pos}$ is a positional embedding
+
+\item The expression of the next layers are
+\begin{equation}
+\begin{split}
+     \bz'_{l}&=\text{MSA}\left((\text{LN}\left(\bz_{l-1}\right)\right)+\bz_{l-1}\\
+     \bz_l&=\text{MLP}(\text{LN}(\bz_{l}))+\bz'_{l}
+\end{split}
+\end{equation}
+where MSA stands for multihead self-attention and LN is layer normalization. 
+\end{itemize}
+\end{frame}
+\begin{frame}{Vision transformer}{Operation}
+    \begin{itemize}
+        \item The MLP has two layers and Gaussian Error Linear Activation (GELU)
+        \end{itemize}
+\begin{equation}
+      \text{GELU}(u) =  x \varPhi(u) \approx 0.5 x\left(1 + \tanh\left[\sqrt{\frac{2}{\pi}}\left(x+0.044715x^3 \right)\right]\right)
+\end{equation}
+      where $\varPhi$ is the error function.
+
+
+\begin{multicols}{2}
+    
+    \includegraphics[scale=0.3]{Module 6 (Attention-based networks)/pics/GELU.pdf}
+
+\columnbreak
+
+The first element of the sequence at the output is used to code the image class 
+\begin{equation}
+    \by = \text{LN}\left( \bz_L^0 \right)
+\end{equation}
+
+\end{multicols}
+The input sequence can be constructed from feature maps of a CNN.
+\end{frame}
+
+\begin{frame}{Vision transformer Experiments}{Datasets}
+\begin{itemize}
+\item Training 
+\begin{itemize}
+    \item ILSVRC-2012 ImageNet dataset with 1000 classes nd  1.3M  images.
+    \item ImageNet-21k  with 21000 classes and 14M images 
+    \item JFT  with 18000 classes and 303M high-resolution images.  
+    
+    
+\end{itemize}
+\item Test
+\begin{itemize}
+\item  ImageNet with original validation labels 
+\item ImageNet with  ReaL labels 
+\item CIFAR-10/100 
+\item Oxford-IIIT Pets
+\item Oxford Flowers-102 
+\item VTAB
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Models and results}
+    \begin{table}[]
+\begin{tabular}{lccccc}
+Model     & layers & Hidden size D & MLP size & Heads & Parameters \\ \hline
+ViT-Base  & 12     & 768           & 3072     & 12    & 86M        \\
+ViT-Large & 24     & 1024          & 4096     & 12    & 307M       \\
+ViT-Huge  & 32     & 1280          & 5120     & 16    & 632M       \\ \hline
+\end{tabular}
+\end{table}
+\begin{center}
+    \includegraphics[scale=0.18]{Module 6 (Attention-based networks)/pics/resultsViT.png}
+\end{center}
+14 and 16 stand for the patch size. First L model trained with JFT and second L model trained with Imagenet21K. 
+\end{frame}
+\end{document}
+
+

@@ -1,0 +1,138 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\usepackage{algorithm,algorithmic}
+\usepackage[algo2e]{algorithm2e} 
+%\title{Lesson 1.1}
+\title{1. Feedforward neural networks}
+\subtitle{1.3b. The Backpropagation algorithm (2)}
+
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Gradient  with respect to hidden  weights}
+
+\begin{itemize}
+\item Using the same reasoning as before, we compute the gradient of the cost function $J_{ML}(\by,\bbf(\bx))$ with respect to weight $w^{(L-1)}_{i,j}$:
+\begin{equation}
+    \frac{d}{dw_{i,j}^{(L-1)}} J_{ML}\left(
+    \by,\underbrace{\bo\left({\bW^{(L)}}^\top\bphi\left({\bW^{(L-1)}}^\top\bh^{(L-2)}\right)\right)}_{\bbf(\bx)}
+    \right)
+\end{equation}
+\item First, we determine what elements are connected to $w_{i,j}^{(L-1)}$, and this can be done graphically.
+
+\end{itemize}
+\end{frame}
+\begin{frame}
+\begin{multicols}{2}
+\begin{center}
+    \includegraphics[scale=0.32]{Module 1 (NN)/pics/backprop.pdf}
+    \end{center}
+    
+\columnbreak
+~\\
+\begin{itemize}
+\item Elements involved in the computation of the derivative with respect to $w_{i,j}^{(L-1)}$:
+\begin{itemize}
+\item Weights $w_{j,k}^{(L)}$ and outputs $o_k$.
+\item Node $h_j^{(L-1)}$.
+\item Node $h_i^{(L-2)}$.
+\end{itemize}
+\end{itemize}
+\end{multicols}
+\end{frame}
+
+\begin{frame}{Chain rule}{Hidden layer}
+
+\begin{itemize}
+    \item Specifically, the elements of the chain are
+\begin{equation}\label{eq:elements_chain}
+    \begin{array}{rl}
+        o_k = o(z_k^{(L)}), & z_k^{(L)} = \bw_k^{(L)}\bh^{(L-1)},~\forall k \\
+    h_j^{(L-1)}=\phi\left(z_j^{(L-1)}\right),
+        &z_j^{(L-1)} = \bw_j^{(L-1)}\bh^{(L-2)} \\
+    \end{array}
+\end{equation}
+where  $\bw_j^{(L-1)}$ contains the element of interest  $w_{i,j}^{(L-1)}$. 
+
+
+
+\item We can compute the derivative with respect to $w_{i,j}^{(L-1)}$:  
+
+\begin{equation}\label{eq:backprop_L-1_first}
+    \frac{d}{dw_{i,j}^{(L-1)}}   J_{ML}(\by,\bbf(\bx)) = \sum_{k}
+    \underbrace{\frac{\delta J_{ML}}{do_k}\frac{do_k}{dz_k^{(L)}}}_{\delta_k^{(L)}}
+    \underbrace{\frac{dz_k^{(L)}}{dh_{j}^{(L-1)}}}_{w_{j,k}^{(L)}}
+    \underbrace{\frac{dh_j^{(L-1)}}{dz_j^{L-1}}}_{\phi'}
+    \underbrace{\frac{dz_j^{(L-1)}}{dw_{i,j}^{(L-1)}}}_{h_i^{L-2}}
+\end{equation}
+\end{itemize}
+\end{frame}
+\begin{frame}{Chain rule}{Hidden layer}
+\begin{itemize}
+\item Taking into account the expressions in Eqs. \eqref{eq:elements_chain} and \eqref{eq:backprop_L-1_first}, this turns into equation 
+
+\begin{equation}\label{eq:backprop_L-1}
+    \frac{d}{dw_{i,j}^{(L-1)}}   J_{ML}(\by,\bbf(\bx)) =\underbrace{\sum_{k}
+    \delta_k^{(L)}w_{k,j}^{(L)}\phi'\left(z^{(L-1)}_j\right)}_{\delta_j^{L-1}}
+    h^{L-2}_i=h^{(L-2)}_i\delta_j^{(L-1)}
+\end{equation}
+\item Expression $\sum_{k} \delta_k^{(L)}w_{k,j}^{(L)}$ is the element $j$ of vector $\bW^ {(L)}{\boldsymbol \delta}^{(L)}$
+\item This vector is elementwise multiplied with the elements of $\bphi'\left(\bz^{(L-1)}\right)$. 
+\end{itemize}
+
+\end{frame}
+\begin{frame}{Weight update}{Hidden layer}
+    \begin{itemize}
+        \item In summary, from 
+
+\begin{equation}\nonumber 
+    \frac{d}{dw_{i,j}^{(L-1)}}   J_{ML}(\by,\bbf(\bx)) =\sum_{k}
+    \delta_k^{(L)}w_{k,j}^{(L)}\phi'\left(z^{(L-1)}_j\right)
+    h^{L-2}_i=h^{(L-2)}_i\delta_j^{(L-1)}
+\end{equation}
+\item we define 
+        \begin{equation}
+    {\boldsymbol \delta}^{(L-1)} = \bW^ {(L)}{\boldsymbol \delta}^{(L)}\odot \phi'\left(\bz^{(L-1)}\right)
+\end{equation}
+\item  and 
+\begin{equation}
+ \nabla_{\bW^{L-1}}J_{ML}\left(\by,\bbf\left(\bx\right)\right)={\bh^{(L-2)}} {\boldsymbol \delta}^{(L-1)^\top} 
+\end{equation}
+
+
+\item Finally
+
+\begin{equation}
+    \bW^{(L-1)} \leftarrow     \bW^{(L-1)}  - \mu  {\bh^{(L-2)}} {\boldsymbol \delta}^{(L-1)^\top}
+\end{equation}  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Weight update}{Hidden layer}
+    \begin{itemize}
+        \item The process can be iterated down to the input layer, with the same result, and therefore the update of weight matrix $\bW^{(l-1)}$ is 
+\begin{equation}\label{eq:bp_update}
+    \bW^{(l-1)} \leftarrow \bW^{(l-1)} - \mu   {\bh^{(l-2)}} {{\boldsymbol \delta}^{(l-1)}}^\top
+\end{equation}
+where
+\begin{equation}\label{eq:general_error_term}
+    {\boldsymbol \delta}^{(l-1)} = \bW^ {(l)}{\boldsymbol \delta}^{(l)}\odot
+    \phi'\left(\bz^{(l-1)}\right)
+\end{equation}
+
+where to start and end the process, we need
+\begin{equation}
+\begin{split}
+\bdelta^{(L)} & = \nabla_{\bo}J_{ML}(\by,\bo) \odot \bo'\\
+\bh^{(0)}&=\bx  ~~\text{(Input layer)}
+\end{split}
+\end{equation}
+\end{itemize}
+\end{frame}
+
+\end{document}

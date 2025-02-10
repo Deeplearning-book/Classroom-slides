@@ -1,0 +1,136 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+
+\title{4. Convolutional Neural networks}
+\subtitle{4.3. Advanced CNN structures}
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Alexnet }
+\begin{itemize}
+    \item Alex Krizhevsky, Ilya Sutskever and Geoffrey Hinton (2012).
+    \item Able to solve the Imagenet image classification problem with 1000 classes. 
+    \item Won the 2-12 ImageNet Large Scale Visual Recognition Challenge (LSVRC) conmpetition.
+    \item Structure:
+    \begin{itemize}
+     \item 8 layers and 60M learnable parameters. 
+     \item  5 are convolutional layers along with max-pooling layers and 3 fully connected layers and ReLU non-linearity. \item SoftMax with 1000 outputs.
+     \end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}{Alexnet}
+    \includegraphics[width=\textwidth]{Module 4 (CNN)/pics/alexnet.pdf}
+\end{frame}
+\begin{frame}{Alexnet}
+\begin{itemize}
+    \item RGB images,  $224\times 224 \times 3$ 
+    \item The convolutions include a stride of 4 pixels. 
+    \item A padding of 3 pixels are possibly used. 
+    \item  The fifth convolutional layer contains 256 kernels of size $3\times 3\times 192$ 
+    \item Each of the hidden fully connected layers has 4096 neurons. 
+    \item Novelties:
+    \begin{itemize}
+    \item Data augmentation by a factor of 2048 by extracting random patches from the images and altering the intensities of the RGB channels. 
+    \item Dropout, ReLU, overlapping pooling, multi-GPU.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{VGG}
+
+\begin{itemize}
+    \item  VGG stands for Visual Geometric Group. This network was developed in the year 2014 by Karen Simonyan and Andrew Zisserman (Oxford University, 2014).
+    \item Second place, 2014 ImageNet ILSVRC competition. 
+    \item Main idea: increase the depth of the convolutional network in large-scale image recognition settings. 
+     \item Smaller convolutional filters were used for increased depth.  
+\end{itemize}    
+\end{frame}
+\begin{frame}{VGG}
+
+\includegraphics[width=\textwidth]{Module 4 (CNN)/pics/vgg_net.pdf}
+    
+\end{frame}
+
+\begin{frame}{VGG}
+\begin{itemize}
+    \item  Depth is achieved through a stack of convolutional layers. 
+    \item Convolutional kernels of smaller size ($3\times 3$).
+    \item five max-pooling layers with a window size of $2\times2$ and a stride 2. 
+    \item ReLU activations. 
+    \item Three fully connected layers with 4096, 4096 and 1000 nodes, with softmax activation.
+    \item Incorporates 1$\times1$ convolutions, that are just linear transformations. 
+\end{itemize}
+\end{frame}
+\begin{frame}{VGG}
+\begin{itemize}
+    \item First to use a p[reprocessing block that crops the image to size $224\times224$, extracts the mean RGB value.
+    \item Shows that 3$\times$3 kernels stacked several times is as effective as a 5$\times$5 or $7\times7$ kernel. 
+    \item 6 versions with 11 layers, 16 layers (VGG16) and 19 layers (VGG19), containing different number of convolution layers, but all of them kept the same number of fully connected layers and nodes.
+\end{itemize}
+   
+\end{frame}
+
+\begin{frame}{Inception}
+    \begin{itemize}
+        \item Inception-v1/GoogleNet has 22 layers and 5 million parameters. 
+        \item Winner of the 2014 ImageNet LSVR Competition. 
+        \item Previous structures are focused on increasing the depth. Inception has recurring blocks of convolutional designs called Inception modules. 
+        \item Around 100 layers. 
+        \item ReLU activations. 
+        \item Auxiliary classifiers in order to prevent the vanishing gradient problem.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Inception}
+
+ \includegraphics[width=\textwidth]{Module 4 (CNN)/pics/inception-v3.pdf}
+    
+\end{frame}
+\begin{frame}{ResNet}
+    \begin{itemize}
+        \item Winner of the 2015 ImageNet localization, ImageNet detection, in the LSCR competition and segmentation and detection challenges in the 2015 Common Objects in COntext (COCO) competition.   
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{ResNet}
+        \includegraphics[width=\textwidth]{Module 4 (CNN)/pics/resnet-34.png}
+\end{frame}
+
+\begin{frame}{Others}
+    \begin{itemize}
+    \item Xception, Fran{\c c}ois Chollet (2017).
+    \item MobileNet, Google (2017).
+    \item Densenet, Cornell University, Tsinghua University, Facebook, 2017.
+    \item EfficientNet, Mingxing Tan and Quoc Le (2019).
+    
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Comparisons}
+
+\begin{center}
+    \includegraphics[scale=0.3]{Module 4 (CNN)/pics/accuracy.pdf}
+
+{Comparison of top 1\% and top 5\% accuracy of different CNNs.}
+\end{center}
+
+
+    
+\end{frame}
+\begin{frame}{Comparisons}
+\begin{center}
+\vspace{-0.7cm}
+\includegraphics[scale=0.3]{Module 4 (CNN)/pics/gflop_acc_param_CNNnets.pdf}
+\end{center}
+Comparison of top 1\% accuracy, Number of parameters and operations (G-FLOPS) of different CNN architectures for image classification.
+
+    
+\end{frame}
+
+\end{document}

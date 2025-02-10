@@ -1,0 +1,170 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+
+\title{4. Convolutional Neural networks}
+\subtitle{4.2. Operational elements of the CNN}
+
+\addtobeamertemplate{frametitle}{}
+
+\begin{document}
+
+\maketitle
+\begin{frame}{Introduction}
+ \begin{itemize}
+\item The basic CNN backpropagation is usually not sufficient to produce good results, due to the high complexity of most CNN structures. The techniques applied to the training of a CNN include:
+\begin{itemize}
+ \item The $L_1$ and $L_2$ regularization techniques explained in Module 1. 
+ \item Other regularization techniques as dropout, early stopping, minibatch learning, data augmentation. 
+ \item Data normalization techniques.
+\end{itemize}
+\item The SDG algorithm is extended with the techniques so called momentum, Nesterov Accelerated Gradient, Adagrad, RMSProp, Adam and other similar optimizers.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{$L_1$ and $L_2$ Regularization}
+    \begin{itemize}
+        \item $L_1$ and $L_2$ regularization have been treated in Module 1. 
+        In the case of $L_2$, the regularization term is 
+\begin{equation}
+    J(\theta) = J_{ML}(\theta) + \frac{\lambda}{2}||\bW^{(l)}||^2_F
+\end{equation}
+And its gradient is
+\begin{equation}
+    \nabla_{\bW^{(l)}}J(\theta) = \nabla_{\bW^{(l)}}J_{ML}(\theta) + \lambda\bW^{(l)}
+\end{equation}
+\item For the case of $L_1$, the regularization is
+\begin{equation}
+    J(\theta) = J_{ML}(\theta) + \lambda||\bW^{(l)}||_1
+\end{equation}
+with a gradient 
+\begin{equation}
+    \nabla_{\bW^{(l)}}J(\theta) = \nabla_{\bW^{(l)}}J_{ML}(\theta) + \lambda sign(\bW^{(l)})
+\end{equation}
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Dropout}
+\begin{itemize}
+\item Dropout is a regularization method consisting of disconnecting nodes at random during the training. 
+\item This prevents nodes to co-adapt.
+\end{itemize} 
+\begin{multicols}{2}
+
+    \includegraphics[scale=0.4]{Module 4 (CNN)/pics/dropout.png}
+
+\columnbreak
+\begin{itemize}
+    \item During training, keep nodes randomly with probability $p$ (usually $p > 0.5$) at each minibatch training. 
+    \item During test, use all weights multiplied by $p$.
+\end{itemize}
+\end{multicols}
+\begin{itemize}
+    \item Dropout is usually combined with a max-norm regularization that forces the norm of the weights to be under a given maximum value.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Data augmentation}
+    \begin{itemize}
+    \item Generating new training  samples to increase its  diversity. 
+    
+    \item For images, data augmentation is done by geometric transformations on data: Cropping, flipping, zooming, translations, and blurring specific pixels. 
+    
+    \item Lighting biases are fixed by color space transformations. 
+    \item Deep learning-based data augmentation uses Generative Adversarial Networks (GAN) and feature space augmentations. 
+    
+    
+\end{itemize}
+\begin{center}
+\begin{tiny}Data augmentation from the CIFAR10 dataset.\end{tiny}
+
+\includegraphics[scale=0.35]{Module 4 (CNN)/pics/data_cifar.pdf}
+\includegraphics[scale=0.35]{Module 4 (CNN)/pics/data_aug.pdf}\\
+
+\end{center}
+\end{frame}
+
+\begin{frame}{Optimizers}{SDG with momentum}
+The momentum in an optimizer consists of a fraction of the previous gradient descent. 
+\begin{equation}\label{eq:momentum_velocity}
+    \bV_{k} = \gamma\bV_{k-1} - \mu \nabla_{\bW} J(\bW_{k}) 
+\end{equation}
+
+Parameter $\gamma$ controls the quantity of momentum in the descent. 
+\begin{equation}
+    \bW_{k+1} = \bW_0 + \sum_{k'=0}^k \bV_{k'} = \bW_{k} + \bV_k
+\end{equation}
+$\bV$ plays the role of a velocity vector.
+\end{frame}
+
+\begin{frame}{Optimizers}{Nesterov Accelerated Gradient}
+\begin{itemize}
+\item With momentum optimization, if the particle arrives at the minimum, it will keep moving with a vanishing oscillatory movement. 
+\item  The Nesterov accelerated gradient descent looks at the gradient one step ahead. The update of the weight vector would be 
+\begin{equation}
+    \tilde{\bW}_{k+1} = \bW_{k} + \bV_k
+\end{equation}
+\item The update equations are 
+\begin{equation}
+\begin{split}
+    \bV_k &= \gamma \bV_{k-1} - \mu \nabla_{\bW} J(\tilde{\bW}_k)\\
+    \bW_{k+1} & = \bW_k + \bV_k 
+\end{split}
+\end{equation}
+\end{itemize} 
+\end{frame}
+
+\begin{frame}{Optimizers}{Adagrad}
+\begin{itemize}
+\item Adapts the learning rate to each one of the parameters as a function of the norm of the gradient at each one of these parameters. 
+\item It first computes the accumulated square value of each component of the gradient 
+\begin{equation}
+    \bG_k = \bG_{k-1} + \nabla_{\bW}J(\bW_{k}) \odot \nabla_{\bW}J(\bW_{k})
+\end{equation}
+\item Then, it updates each one of the parameters $w_{i,k}$ in $\bw_k$ as
+\begin{equation}
+    w_{i,k+1} = w_{i,k} - \frac{\mu}{\sqrt{g_{i,k}}+\varepsilon} \left[\nabla_{\bW}J(\bW_{k})\right]_i
+\end{equation}
+where $\left[\nabla_{\bW}J(\bW_{k})\right]_i=\frac{d}{dw_{i}}J(\bW_{k})$ is the $i^{th}$ element of the gradient vector and $\varepsilon$ is a small number that is used for numerical stability. 
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Optimizers}{RMSProp}
+\begin{itemize}
+\item  The AdaGrad algorithm has a learning rate that decreases monotonically with time, which will end up in a learning rate that tends to zero. 
+
+\item The root mean square propagation (RMSProp) algorithm forgets about the squared gradients of remote time instants through an exponential decay
+\begin{equation}\label{eq:sq_grad_RMSProp}
+    \bG_k = \gamma \bG_{k-1} + \left(1-\gamma\right) \nabla_{\bW}J(\bW_{k}) \odot \nabla_{\bW}J(\bW_{k})
+\end{equation}
+\item If $\gamma=1$ the algorithm forgets everything about the past gradients. If $\gamma=0$, the algorithm is identic to the AdaGrad one. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Optimizers}{Adam}
+    The Adam (Adaptive Momentum Estimation) algorithm is a combination of the previous two ones. 
+
+\begin{equation}
+     \bV_{k} = \beta_1\bV_{k-1} - (1-\beta_1) \nabla_{\bW} J(\bW_{k}) 
+\end{equation}
+\begin{equation}\label{eq:Adam_velocity} 
+    \bG_k = \beta_2 \bG_{k-1} + \left(1-\beta_2\right) \nabla_{\bW}J(\bW_{k}) \odot \nabla_{\bW}J(\bW_{k})
+\end{equation}
+\begin{equation}\label{{eq:sq_grad_Adam}}
+    \begin{split}
+        \tilde{\bV}_k & = \frac{\bV_k}{1-\beta_1^{k}}\\
+        \tilde{\bG}_k & = \frac{\bG_k}{1-\beta_2^{k}}\\
+    \end{split}
+\end{equation}
+ Each element of the weight vector $\bw_k$ is updated as 
+\begin{equation}
+    w_{i,k+1} = w_{i,k} -\mu \frac{v_{i,k}}{\sqrt{g_{i,k}}+\varepsilon} 
+\end{equation}
+
+
+
+\end{frame}
+
+\end{document}

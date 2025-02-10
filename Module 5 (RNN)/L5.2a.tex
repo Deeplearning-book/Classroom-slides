@@ -1,0 +1,92 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\title{5. Sequence modeling with recurrent neural networks}
+\subtitle{5.2a. Training an RNN. Recursive gradients}
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+\maketitle
+
+\begin{frame}{RNN training}{The cost function}
+\begin{itemize}
+\item Assume an RNN designed to classify among $K$ classes \item A training sequence $\bx_t \in \mathbb{R}^D$, $\by_t \in \mathbb{R}^K$, $1 \leq t \leq T$ is available.
+\item We must then maximize the cross entropy between the labels and the outputs or, equivalently, the output likelihood: 
+\begin{equation}\label{eq:RNN_cost}
+    J_{ML}(\btheta,\bX,\bY)=- \sum_{t=1}^T \ell(\bx_t) =-\sum_{t=1}^T\sum_{k=0}^{K-1} y_{k,t} \log \softmax\left(z^{(o)}_{k,t}\right)
+\end{equation}
+ where
+ \item $\bX = \left[\bx_1 \cdots \bx_T \right]$ and $\bY =\left[\by_1 \cdots \by_T\right]$.
+\item  $\btheta = \{\bW_{hx}, \bW_{hh}, \bW_{oh}\}$ contains all trainable parameters. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RNN training}{The Jacobian with respect to $\bh_t$}
+\begin{itemize}
+\item We  must consider that the hidden state $\bh_t$ at every instant depends on the states $\bh_{t'}$, $t'<t$. \item During the backpropagation  $\nabla_{\bh_t}J_{ML}$ appears. For   $t=T$,
+\begin{equation}\label{eq:grad_J_h_T}
+    \nabla_{\bh_T}J_{ML} = \frac{\delta \bz^{(o)}_T}{\delta\bh_T} \nabla_{\bz^{(o)}_T}J_{ML}
+\end{equation}
+where $ \nabla_{\bz^{(o)}_T}J_{ML}$ is the output error: 
+\begin{equation}
+    \frac{dJ_{ML}}{d z^{(o)}_{k,T}} = 
+    \frac{dJ_{ML}}{d o_{k,T}} \frac{o_{k,t}}{d z^{(o)}_{k,T}}  =\frac{dJ_{ML}}{d o_{k,T}} o'_{k,T} =\delta_{k,T}
+\end{equation}
+ \item Since the output of the RNN is a softmax, $\bdelta_{t} =  \softmax(\bz^{(o)}_{t}) - \by_{t}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RNN training}{The Jacobian with respect to $\bh_t$}
+\begin{itemize}
+    \item For $t<T$, the cost function in Eq. \eqref{eq:RNN_cost} contains $\bh_t$ in element $\ell(\bx_t)$ and in the next one, $\ell(\bx_{t+1})$ since
+\begin{equation}
+    \bh_{t+1}=\tanh\left(\bz^{(x)}_{t+1}\right)=\tanh\left(\bW_{hx}^\top\bx_{t+1} + \bW_{hh}^\top\bh_{t}+\bb_{h}\right)
+\end{equation}
+
+
+\item Jacobian $\frac{\delta \bh_{t+1}}{\delta \bh_t} $ will appear in the chain rule, with elements $\frac{\delta h_{j,t+1}}{\delta h_{i,t}}$. By applying the chain rule of calculus to them
+\begin{equation}\label{eq:deriv_h_jtau}
+    \frac{\delta h_{j,t+1}}{\delta h_{i,t}} = \frac{\delta h_{j,t+1}}{\delta z^{(x)}_{j,t+1}} \frac{\delta z^{(x)}_{j,t+1}}{\delta h_{i,t}} = \frac{\delta h_{j,t+1}}{\delta z^{(x)}_{j,t+1}} \frac{\delta \bw_{j,hh}^\top \bh_{t}}{\delta h_{i,t}}
+\end{equation}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{RNN training}{The Jacobian with respect to $\bh_t$}
+\begin{itemize}
+
+\item The first derivative of the right side of expression \eqref{eq:deriv_h_jtau} is the derivative of the hyperbolic tangent. The second derivative is parameter $w_{i,j,hh}$. 
+\item Therefore
+\begin{equation}\label{eq:deriv_h_jtau_result}
+    \frac{\delta h_{j,t+1}}{\delta h_{i,t}} = w_{i,j,hh}\text{tanh}'\left(z^{(x)}_{j,t+1 }\right)
+\end{equation}
+\item Thus, Jacobian $\frac{\delta\bh_{t+1}}{\delta\bh_{t}}$ is 
+\begin{equation}\label{eq:jacobian_h}
+  \frac{\delta\bh_{t+1}}{\delta\bh_{t}} = \bW_{hh} \text{diag}\left(\text{tanh}'\left(\bz^{(x)}_{t+1 }\right)\right) 
+\end{equation}
+\end{itemize}
+\end{frame}
+\begin{frame}{RNN training}{The Jacobian with respect to $\bh_t$}
+\begin{itemize}
+    \item  With all these elements, the gradient of the cost function with respect to hidden state $\bh_t$ is 
+\begin{equation}\label{eq:grad_J_h_t_final}
+\begin{split}
+    \nabla_{\bh_t}J_{ML} &=  \frac{\delta \bz^{(o)}_{t}}{\delta \bh_t}  \nabla_{\bz^{o}_t}J_{ML} + \frac{\delta \bh_{t+1}}{\delta \bh_t} \nabla_{\bh_{t+1}}J_{ML}\\
+    &=\bW_{oh}\bdelta_{t} + \bW_{hh}  \text{diag}\left(\text{tanh}'\left(\bz^{(x)}_{t+1}\right)\right)\left(\nabla_{\bh_{t+1}}J_{ML} \right)
+\end{split}
+\end{equation}
+\item This is a recursive equation.
+\item The first term of of Eq. \ref{eq:grad_J_h_t_final}  is the the error backpropagated from the output at instant $t$ through the output weights $\bW_{oh}$. 
+\item The error backpropagated from the next time instant is the second term, which contains the output error at instant $t+1$ backpropagated to the network at instant $t$ through the hidden weights $\bW_{hh}$. 
+\end{itemize}
+ 
+\end{frame}
+\begin{frame}{RNN training}{Idea of the backpropagation}
+\begin{center}
+    \includegraphics[scale=0.45]{Module 5 (RNN)/pics/smaller_rnn_unrolled_BP.pdf}
+    \end{center}
+\end{frame}
+
+\end{document}

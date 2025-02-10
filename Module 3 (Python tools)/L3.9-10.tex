@@ -1,0 +1,160 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+
+\title{3. Deep learning tools}
+\subtitle{3.9 TensorFlow and Keras}
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Elements of Tensorflow}{Introduction}
+\begin{itemize}
+\item Open-source machine learning library developed by the Google Brain team in 2012. 
+\item It has tools and libraries for developing deep learning applications. 
+\item It uses multidimensional arrays (tensors) as the basic elements. 
+\item Efficient management  of large-scale datasets.
+\item GPU support.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Elements of Tensorflow}
+
+\begin{table}[H]
+\begin{tabular}{l|l|l}
+\textbf{Term} &
+  \textbf{Definition} &
+  \textbf{Examples} \\ \hline
+Tensor &
+  \begin{tabular}[c]{@{}l@{}}Array containing the data\\ in multiple dimensions.\end{tabular} &
+ \\ 
+Shape &
+  \begin{tabular}[c]{@{}l@{}}Number of elements\\ in each dimension of a \\ tensor.\end{tabular} &
+ % \begin{tabular}[c]{@{}l@{}}
+\begin{lstlisting}[numbers=none]
+Scalar = 25, shape = []
+Vector = [1,2], shape = [2]
+Matrix = [[3,4],
+          [5,5]],
+          shape = [2,2]
+Tensor = [[[1,2],
+           [2,5],
+           [3,2]]
+          [[4,5],
+           [7,8],
+           [4,1]]], 
+           shape = [2, 3, 2]
+\end{lstlisting}
+%\end{tabular}
+\\
+\end{tabular}
+\end{table}
+\end{frame}
+
+
+\begin{frame}[fragile]{Elements of Tensorflow}{Terms and definitions}
+
+\begin{table}[H]
+\begin{tabular}{l|l|l}
+\textbf{Term} &
+  \textbf{Definition} &
+  \textbf{Examples} \\ \hline
+Type &
+  \begin{tabular}[c]{@{}l@{}}Data structure to represent \\tensors. \\ \\Common tensor types:\\\\  1. Constant : Fixed values\\\\ 2. Variables : Values can be\\updated over time. \\\\  3. Placeholder: \\ Initialization not required.\end{tabular} &
+  \begin{lstlisting}[numbers=none]
+tf.constant(5)
+
+tf.Variable([[1,1],[5,5]],
+name = 'matrix')
+
+tf.placeholder(tf.float64,
+shape = {[}None,5{]})
+\end{lstlisting}
+ \end{tabular}
+ \end{table}
+\end{frame}
+
+\begin{frame}[fragile]{Elements of Tensorflow}{Terms and definitions}
+
+\begin{table}[H]
+\begin{tabular}{l|l|l}
+\textbf{Term} &
+  \textbf{Definition} &
+  \textbf{Examples} \\ \hline
+Graph &
+  \begin{tabular}[c]{@{}l@{}}Data structures \\ consisting of nodes \\ that allows the flow of \\ computational operations.\end{tabular} &
+  \begin{tabular}[c]{@{}l@{}}a = 10\\ b = 6\\ out = tf.subtract(a,b)\end{tabular} \\ \hline
+Session &
+  \begin{tabular}[c]{@{}l@{}}Used to evaluate\\ the computational\\ operations in a graph.\end{tabular} &
+  \begin{tabular}[c]{@{}l@{}}s = tf.Session()\\ s.run(out)\\ s.close()\end{tabular} \\ \hline
+\end{tabular}
+\end{table}
+Examples are provided in separate notebooks.
+\end{frame}
+
+\begin{frame}{Elements of Keras}{Introduction}
+
+\begin{itemize}
+    \item TensorFlow is a low-level language with high complexity. 
+    \item Keras can be used to simplify these complexities. 
+    \item Developed at Google by Francois Chollet.
+\item 
+High-level deep learning library. It
+can run on top of  Tensorflow, Cognitive Toolkit (CNTK), Theano, etc. 
+\item Minimalistic structure for 
+faster implementation of complex structures. 
+
+\item Supports CPU and
+GPU.
+\item Widely used in machine learning, computer vision, and
+time series-related applications.
+\item    The components of Keras are  Models, Layers and Core. 
+\end{itemize}
+\end{frame}
+\begin{frame}{Elements of keras}{Models}
+
+\begin{itemize}   
+\item Keras Models are composed of layers. 
+\item The different layers constitute the Neural network. \item  The simple sequential composition models are called Sequential models. 
+\item Sequential are added with \emph{model.add}. 
+
+\item Sub-classing technique can be used to develop further complex models. To be discussed further.
+\item Function API models are used to develop more flexible, complex models.  It uses graphs of layers.\\
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Elements of Keras}{Layers}
+\begin{itemize}
+\item Layers are next in the hierarchy of the Keras structure. 
+\item They are input, hidden and output layer in neural network models. 
+
+\item Most common available pre-defined layers are: 
+\begin{itemize}
+    \item \textbf{Convolutional}, \textbf{
+    \item Pooling}, 
+    \item \textbf{Recurrent} 
+    \item \textbf{Core}.
+\end{itemize}
+\item In between the previous layers, \textbf{dropout} layers can be added to reduce overfitting.
+
+\end{itemize}
+\end{frame}
+\begin{frame}{Elements of Keras}{Core}
+\begin{itemize}
+\item  Basic building blocks of any keras model architecture. 
+\item They are built-n functions that support the Keras model ensuring its proper functioning. 
+\item The modules used include: 
+\begin{itemize}
+    \item \emph{Activation functions} such as softmax, relu, etc, 
+    \item \emph{loss function module} (mean square error, Poisson, likelihood,  mean absolute error etc.), 
+    \item \emph{optimizer module} that uses optimizers such as adam, Stochastic gradient descent (SGD), etc. and \emph{regularizers} (L1 and L2 regularizers). 
+\end{itemize}
+\item These pre-defined modules  support the training of the Neural network models.
+\end{itemize}
+\end{frame}
+
+\end{document}	
+

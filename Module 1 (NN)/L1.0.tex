@@ -1,0 +1,248 @@
+\documentclass{beamer}
+
+\setbeamertemplate{footline}[page number]
+%\setbeamercovered{dynamic}
+\usepackage{setspace}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usefonttheme{serif}
+\usepackage{multirow}
+\usepackage{booktabs} 
+\usepackage{rotating}
+\usepackage{color}
+\usepackage{float}
+%\usepackage[latin1]{inputenc}
+%\usepackage[english]{babel}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amssymb}
+%\usepackage{makeidx}
+%\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\usepackage{eurosym}
+\usepackage{rotating}
+\usepackage{multicol}
+\input{preamble.tex}
+\author{Manel Mart\'inez Ram\'on}
+\title{\textbf{AI in an nutshell}}
+\subtitle{}
+
+\date{}
+
+\addtobeamertemplate{frametitle}{}{}
+
+\section{Manel Mart\'inez-Ram\'on}
+\subsection{\textbf{What is} (wrong with) \textbf{AI?}}
+\begin{document}
+\maketitle
+
+\begin{frame}{Nobel Prize in Physics 2024}
+\centering
+        \includegraphics[scale=0.27]{pics/HINTON_HOPFIELD.png}
+\end{frame}
+
+\begin{frame}{Nobel Prize in Physics 2024}
+\begin{multicols}{2}
+\begin{itemize}
+    \item IA is everywhere. 
+    \item What is its relation with physics?
+    \begin{enumerate}
+    \item  Developed from models known in physics
+    \item  Used to solve problems in physics
+    \item  IA revolutionized the World
+\end{enumerate}
+\end{itemize}
+
+
+\columnbreak
+
+\centering
+\includegraphics[width=0.35\textwidth]{pics/neurons.jpeg}
+    
+
+
+
+\end{multicols}
+
+\end{frame}
+
+\begin{frame}{From computers to reasoning}
+    \includegraphics[scale = 0.15]{pics/computer.png}  
+
+\vspace{-0.1in}
+\hspace{2in}
+    \includegraphics[scale=0.15]{pics/kasparov.png}
+\end{frame}
+
+
+\begin{frame}{Computers and complex tasks}
+\centering
+\includegraphics[scale=0.28]{pics/robot_cooking.jpg}
+\end{frame}
+
+\begin{frame}{Hand me a glass}
+\centering
+\includegraphics[scale=0.7]{pics/glasses.jpg}
+\end{frame}
+
+\begin{frame}{The learning concept}
+\centering
+\includegraphics[scale=0.4]{pics/turing.jpg}
+
+Alan Turing (1912-1954)
+\end{frame}
+
+
+\begin{frame}{What is Artificial Intelligence?}
+\begin{center}
+In 1956, John McCarthy organized a conference in Dartmouth College ``to proceed on the basis of the conjecture that every aspect of learning or any other feature of intelligence can in principle be so precisely described that a machine can be made to simulate it."
+\end{center}
+
+\begin{footnotesize}{McCarthy,  Minsky, Rochester and Shannon, ``\emph{A proposal for the Darmouth Summer Research Project on Artificial Intelligence}'', 1956.}
+\end{footnotesize}
+
+\vspace{0.5cm}
+\centering
+Sixty seven years and six months later,\\ we still do not exactly know what it is. 
+
+\end{frame}
+
+\begin{frame}{The neuron}
+\begin{multicols}{3}
+
+\includegraphics[scale=0.935]{pics/golgi.jpg}
+Camilo Golgi (1843-1926)
+\columnbreak
+
+\includegraphics[scale=2]{pics/cajal.jpg}
+Santiago Ram\'on  y Cajal (1852-1934)
+
+\columnbreak
+
+\includegraphics[scale=0.18]{pics/Fig_retine.png}
+
+Santiago Ram\'on y Cajal, Histologie Du Syst\`eme Nerveux de l'Homme et Des Vert\`ebr\`es, Maloine, Paris, 1911, 
+\end{multicols}
+
+C. Golgi (Italy) and S. Ram\'on y Cajal (Spain) were awarded the 1906 Nobel Prize in Physiology and Medicine. 
+\end{frame}
+
+
+\begin{frame}{Inception of the artificial neuron}
+\begin{itemize}
+    \item McCulloch and Pitts, 1943
+\begin{center}
+\includegraphics[scale=0.15]{pics/McCullochPittsPaper.png}~~~~~~~~
+\includegraphics[scale=0.15]{pics/McCullochPitts.png}
+\end{center}
+
+\item Hebb, 1949
+
+\begin{center}
+\includegraphics[scale=0.25]{pics/hebb_synapsis.png}
+\includegraphics[scale=0.15]{pics/Donald Hebb.jpg}
+\end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The perceptron}
+\begin{itemize}
+\item Rosemblatt, 1958
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.3]{pics/rosemblattsPERCEPTRON.pdf}
+\includegraphics[scale=0.15]{pics/Rosenblatt.jpg}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.25]{pics/NYT_header.png}\\
+\includegraphics[scale=0.33]{pics/Mark_I_perceptron.jpg}
+\includegraphics[scale=0.23]{pics/NYT1958-07-13.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Hopfield, 1982}
+\centering\includegraphics[scale=0.4]{pics/Hopfield_paper.png}
+
+Hopfield uses the collective behavior of matter to generate computational capacity.
+\end{frame}
+
+\begin{frame}{Hinton, 1983}
+    \centering
+    \includegraphics[scale=0.4]{pics/HintonPaper.png}
+
+Hinton uses concepts of thermodynamics to train Hopfield's networks: the Boltzmann distribution. It leads to the concept of collective behavior.
+\end{frame}
+\begin{frame}{The neural network}
+
+\begin{center}
+    \includegraphics[scale=0.3]{pics/mlp.pdf}\\
+       \includegraphics[scale=0.18]{pics/NN_relu1.pdf}
+       \includegraphics[scale=0.18]{pics/spiral.pdf}
+\end{center}
+
+Werbos (1974, 1988);  Rumelhart, Hinton \& Williams (1986). 
+\end{frame}
+
+\begin{frame}{Initial difficulties of AI}
+\begin{center}
+\includegraphics[scale=0.4]{pics/old_computing.pdf}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Convolutional neural networks}
+ David Hubel and Torsten Wiesel (1981 Nobel Prize in Medicine), 1958.
+\begin{center}
+   \includegraphics[scale=0.3]{pics/Hubel_Wiesel.pdf}
+\end{center}
+
+Yan LeCun (2018 Turing Award), 1989
+
+\begin{center}
+    \includegraphics[scale=0.25]{pics/LeCunLicenced.png}\includegraphics[scale=0.35]{pics/Lecun.jpeg}
+\end{center}
+
+    
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Recurrent Neural Networks}
+Elman, 1972, Hochreiter, 1997, Sutskever, 2012
+
+\begin{center}
+\includegraphics[scale=0.1]{pics/rnn_unrolled.pdf}
+\includegraphics[scale=0.2]{pics/google_translate.png}
+\end{center}
+\vspace{-0.5 cm}
+
+
+\end{frame}
+
+
+\begin{frame}{AI tools}
+
+\begin{center}
+    \includegraphics[scale=0.4]{pics/AI_tools.pdf}
+\end{center}    
+\end{frame}
+
+\begin{frame}{Self attention and transformers}
+    \begin{center}
+        \includegraphics[scale=0.5]{pics/self_attention.pdf}
+    \end{center}
+\end{frame}
+\end{document}

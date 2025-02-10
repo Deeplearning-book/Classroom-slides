@@ -1,0 +1,91 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\title{5. Sequence modeling with recurrent neural networks}
+\subtitle{5.1. Structure of the Elman Recursive Neural Network}
+
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+\maketitle
+\begin{frame}{The Hopfield network}
+\begin{multicols}{2}
+\begin{center}
+    \includegraphics[scale=0.8]{Module 4 (RNN)/pics/hopfield.pdf}
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+    \item Introduced in 1982 by John Hopfield. 
+    \item Structure previously introduced by W. A. Little in 1974.
+    \item First to include the idea of recurrence. 
+    \item Used in optimization as the classic travelling salesman problem. 
+    \item Continuous state versions exist.
+\end{itemize}
+
+\end{multicols}
+
+\end{frame}
+\begin{frame}{Structure of the Elman RNN}{State equations}
+\begin{center}
+    \includegraphics[scale = 0.25]{Module 4 (RNN)/pics/rnn_rolled.pdf}
+    \end{center}
+
+\begin{equation}\label{eq:RNN_recursion} 
+\begin{array}{ll}
+\bz^{(x)}_{t}&=\bW_{hx}^\top\bx_{t} + \bW_{hh}^\top\bh_{t-1}+\bb_{h} \\
+\bz^{(o)}_{t}&=\bW_{oh}^\top\bh_{t} +\bb_{o}\\
+\bh_{t}&=\tanh(\bz^{(x)}_{t})\\
+{\bo_{t}}&=\bo(\bz^{(o)}_t)=\text{softmax}(\bz^{(o)}_{t})
+\end{array}
+\end{equation}
+\end{frame}
+
+\begin{frame}{Structure of the Elman RNN}{State equations}
+Introduced by J. L. Elman in 1990, which follows a similar structure
+ by M. I. Jordan, 1986. 
+ \vspace{0.5cm}
+    \begin{itemize}
+    \item The input matrix $\bW_{HX}$ extracts features from the input sample. 
+    \item The output matrix $\bW_{oh}$ transforms the hidden state into an output response, through a softmax activation. 
+    \item The hidden state matrix $\bW_{hh}$ performs the feedback. It must store the dependencies between the past inputs and the present output.  
+    \item the hidden state itself is a summary of the past samples. 
+    \item The network is an infinite impulse response structure. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Structure of the Elman RNN}{The Elman RNN unfolded}
+\begin{center}
+    \includegraphics[scale = 0.2]{Module 4 (RNN)/pics/rnn_unrolled.pdf}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Structure of the Elman RNN}{A more compact view of the RNN}
+\begin{center}
+
+    \includegraphics[scale = 0.4]{Module 4 (RNN)/pics/small_rnn.pdf}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Structure of the Elman RNN}{Unfolded compact representation of the RNN}
+\begin{center}
+    \includegraphics[scale = 0.35]{Module 4 (RNN)/pics/small_rnn_unrolled.pdf}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Structure of the Elman RNN}{Unfolded even more compact representation}
+\begin{center}
+    \includegraphics[scale = 0.35]{Module 4 (RNN)/pics/smaller_rnn_unrolled.pdf}
+\end{center}
+%This is the most compact representation of the behavior of the RNN. The boxes include the affine transformations with the matrices and the nonlinear activations. 
+\begin{itemize}
+    \item Input $\bx_t$ is transformed with $\bW_{hx}$,
+    \item Hidden state $\bh_{t-1}$ is transformed with $\bW_{hh}$ and bias $\bb_h$.
+    \item The output of this box, transformed with a tanh, is $\bh_t$. 
+    
+\end{itemize}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,196 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+
+\title{3. Deep learning tools}
+\subtitle{3.11 Pytorch}
+\addtobeamertemplate{frametitle}{}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Introduction}
+\begin{itemize}
+\item Developed by Facebook's AI Research Lab in 2016. 
+\item It offers a substitution for NumPy by using GPU-optimized tensors.  
+\item Pytorch has automatic differentiation to train neural networks by automatically computing the gradients.
+\item The graphs are built dynamically to allow  changes during run time. 
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]{Elements of Pytorch}{Tensors}
+\begin{itemize}
+\item Tensors are similar to Numpy arrays, but they use both CPU and GPU. 
+\item  Tensors are initially assigned to the GPU memory with the help of a specific API named CUDA, developed for GPU parallel computing by NVIDIA.
+\item If no GPUS are available, CPUs are used. 
+\item Currently, the CUDA API is limited to  NVIDIA GPUs.
+\begin{python}
+s=torch.tensor([[8,2,3],[1, 2, 3]]) 
+print(s)
+print('#dims:' ,s.ndim) 
+\end{python}
+
+\begin{python}
+tensor([[8, 2, 3],
+        [1, 2, 3]])
+#dims: 2
+\end{python}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Elements of Pytorch}{Variables}
+    \begin{itemize}
+\item Variables use the same API for operations but PyTorch has an Autograd package for the variables to compute the gradients automatically. 
+\item 
+If \emph{v} is a variable, the tensor value and the gradient of \emph{v} can be accessed by \emph{p.data} and \emph{p.grad} commands respectively.  
+\item In a training, the variables are used in a directed acyclic graph to compute the output. Then, the \emph{backward()} command constructs a graph to with the gradients to compute the backpropagation.  
+\item Trainable variables are initialized by passing the parameter \emph{requires\_grad} = True.\\
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Elements of Pytorch}{Autograd}
+\begin{itemize}
+\item In this example from Python.org, a very complex pre-trained neural network is imported (more details on it very soon):
+
+\begin{python}
+import torch
+from torchvision.models import resnet18, ResNet18_Weights
+model  = resnet18(weights=ResNet18_Weights.DEFAULT)
+data   = torch.rand(1, 3, 64, 64)
+labels = torch.rand(1, 1000)
+optim = torch.optim.SGD(model.parameters(), lr=1e-2, momentum=0.9)
+\end{python}
+\item We want to retrain the network with the synthesized data using a stochastic gradient descent (SDG) algorithm (do not worry about this line just yet). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Elements of Pytorch}{Autograd}
+\begin{itemize}
+\item Thus, we first compute the corresponding output.
+\begin{python}
+prediction = model(data) # forward pass
+\end{python}
+\item Then we define the loss and we apply a backward pass to it
+\begin{python}
+loss = (prediction - labels).sum()
+loss.backward() # backward pass
+\end{python}
+\item This propagates the error backwards by using a graph with the gradients of the variables. 
+\item Finally, we update the weights
+\begin{python}
+ optim.step() #gradient descent   
+\end{python}
+\item The process should be repeated until a stop criterion is satisfied.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% the explanation of this in python.org is not easy to understand, so I modified the example.
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Elements of Pytorch}{What sorcery is this?}
+\begin{itemize}
+    \item Well, let us define $\bw$, $\bx$, y, and an arbitrary error 
+    \begin{equation}
+    E = x_1w_1^3 -x_2w_2^2-y
+    \end{equation}
+    and then, its gradient will be defined by 
+    \begin{equation}\label{eq:gradients}
+        \begin{split}
+            \frac{\partial E}{\partial w_1}&=3x_1w_1^2\\
+            \frac{\partial E}{\partial w_2}&=-2x_2w_2
+        \end{split}
+    \end{equation}
+    \item Let us give two instance values to $x_1$ and $x_2$ and define $E$ in Pytorch:
+\begin{python}
+w = torch.nn.Parameter(data=torch.Tensor([2., 3.]), requires_grad=True)
+x=torch.Tensor([1,2]) 
+E=x[0]*w[0]**3-x[1]*w[1]**2-y
+\end{python}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Elements of Pytorch}{What sorcery is this?}
+\begin{itemize}
+    \item Notice that we pass the attribute \emph{requires\_grad}.
+\begin{python}
+w = torch.nn.Parameter(data=torch.Tensor([2., 3.]), requires_grad=True)
+x=torch.Tensor([1,2]) 
+E=x[0]*w[0]**3-x[1]*w[1]**2-y
+optim = torch.optim.SGD([w], lr=1, momentum=0)
+\end{python}
+\item Define a loss as the sum of errors and execute the backward pass.
+\begin{python}
+loss = E.sum()
+loss.backward()  
+\end{python}
+\item Let us check the \emph{.grad} attributes and compare them with Eq. \eqref{eq:gradients}.
+\vspace{-0.5cm}
+
+\begin{multicols}{2}
+\begin{python}
+print(w.grad)
+\end{python}
+\columnbreak
+\begin{python}
+tensor([ 12., -12.])
+\end{python}
+
+\end{multicols}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Elements of Pytorch}{What sorcery is this?}
+\begin{itemize}
+    \item Pytorch has computed the gradients of the loss function with respect to each one of the parameters and stored in the corresponding attributes. These gradients can be now used to change the values of the parameters by gradient descent.  
+\end{itemize}
+\begin{python}
+print('Before update', w)
+optim.step()
+print(w.grad)
+print('After update', w)
+\end{python}
+\begin{python}
+Before update: Parameter containing:
+tensor([2., 3.], requires_grad=True)
+Gradient: tensor([ 12., -12.])
+After update: Parameter containing:
+tensor([-10.,  15.], requires_grad=True)
+\end{python}
+\end{frame}
+\begin{frame}{Elements of Pytorch}{What sorcery is this?}
+\begin{itemize}
+    \item In this example we defined the model parameters, by explicitly using method \emph{.nn.Parameter} and we passed the attribute \emph{requires\_grad = True}. 
+    \item The parameters must be sent to the optimized as an iterable object (an array) by using the  \emph{nn} module (introduced next).
+    \item We also defined the algorithm for optimization as SDG, but other variants are available. 
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%
+% ADD A SLIDE WITYH A GRAPH OF THE OPERATION
+%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[fragile]{Elements of Pytorch}{The \emph{nn} package}
+\begin{itemize}
+    
+    \item All the elements of a network including the learnable parameters should inherit from the \emph{nn} package.
+
+    
+    \item It provides a higher level of abstraction over the graphs that are used for creating the neural networks.
+    
+   \item The \emph{nn} package contains the modules needed to implement neural networks, as neural network layers, loss functions, and others, including different kinds of containers for structures (e.g. a sequential structure).    
+
+   \item See  \href{https://pytorch.org/docs/stable/nn.html}{https://pytorch.org/docs/stable/nn.html}.
+
+\end{itemize}
+
+\end{frame}
+\end{document}	
+
