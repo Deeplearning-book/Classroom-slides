@@ -1,0 +1,165 @@
+\documentclass{beamer}
+\input{./preamble.tex}
+\usepackage{algorithm,algorithmic}
+\usepackage[algo2e]{algorithm2e} 
+%\title{Lesson 1.1}
+\title{2. Training practicalities}
+\subtitle{2.2 Optimizers}
+
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Gradient descent}
+The basic optimization technique is the gradient descent. 
+\begin{itemize}
+    \item Stochastic gradient descent (SDG): the gradient is estimated with one sample at a time.
+    \item Gradient descent (GD):  the gradient is estimated with a batch of data.  
+\end{itemize}
+\begin{multicols}{2}
+\includegraphics[scale=0.05]{Module 1 (NN)/pics/adaline.pdf}
+
+\columnbreak
+\begin{itemize}
+\item The Adaline (figure) was the first machine to be trained with SDG. The device consisted of a neuron with a sign activation. The training used the LMS algorithm.
+
+\item Modified 1$^\text{st}$ order algorithms have been proposed that improve the SG.
+
+\end{itemize}
+\end{multicols}
+\end{frame}
+
+\begin{frame}{Momentum optimization}
+    \begin{itemize}
+        \item Assume (without loss of generality) that a set of weights are arranged as a vector $\bw$ simulating the position of a particle in a space, with initial velocity $\bv_0=0$.
+        \item With a given acceleration $\ba(t)$ applied to the particle, the velocity will be
+        $$
+        d\bv =  \ba(t) d t
+        $$
+    \item Now, if the medium has viscosity $\eta$, there will be a deceleration proportional to  the velocity, as
+   $$
+        d \bv(t) =  -\eta \bv(t)  + \ba(t) dt
+    $$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Momentum optimization}
+
+By discretizing the differential equations we obtain
+
+$$
+\Delta\bv_{k+1} = -\eta \bv_k + \ba_k \Delta t 
+$$
+$$
+\bv_{k+1} = \gamma \bv_k + \ba_k  
+$$
+which is obtained by assuming $\Delta t =1$ and $\gamma = 1-\eta$
+\begin{multicols}{2}
+\includegraphics[scale=0.3]{Module 1 (NN)/pics/viscosity.png}
+
+Example: A particle is applied a force $F=mg$ where $g=0.1$ in a viscous fluid. The particle has a viscosity coefficient $\gamma=0.002$. At $t=6000$, the force is suppressed.  
+
+\columnbreak
+
+\end{multicols}
+\end{frame}
+
+
+\begin{frame}{Momentum optimization}
+
+This can be applied to optimization, by assuming that the particle is on the cost function surface and that the acceleration is proportional to the gradient (the slope of the surface). The velocity of the particle is
+$$
+\bv_{k} = \gamma\bv_{k-1} - \mu \nabla_{\bw} J(\bw_{k}) 
+$$
+
+and its position is the integral of the velocity
+
+$$
+\bw_{k+1} = \bw_0 + \sum_{k'=0}^k \bv_{k'} = \bw_{k} + \bv_k
+$$
+\end{frame}
+
+
+
+\begin{frame}{Nesterov Accelerated gradient}
+
+When the gradient is zero, the Momentum optimization will still have a velocity. The approach introduced by Yuri Nesterov (1983)  computes the gradient one step ahead to modify the velocity. 
+\begin{multicols}{2}
+\includegraphics[scale=0.3]{Module 1 (NN)/pics/nesterov.png}
+
+Velocity of the particle around a minimum of the cost function using the Momentum and the Nesterov optimizers.
+
+\columnbreak
+
+Assuming a present position $\bw_k$ and velocity $\bv_k$, the next position is computed as  
+$$\tilde{\bw}_{k+1}  = \bw_{k} + \bv_k$$
+from which the velocity is modified 
+    $$\bv_k = \gamma \bv_{k-1} - \mu \nabla_{\bw}J(\tilde{\bw}_k)$$ 
+and then the position is updated
+$$    \bw_{k+1}  = \bw_k + \bv_k $$
+\end{multicols}
+
+\end{frame}
+
+\begin{frame}{Root Mean Square Propagation (RMSProp)}
+The RMSProp adapts the learning rate of each of the weights by an average of the squared norm of the corresponding component of the weight through a decaying window:
+
+$$
+\bg_k = \beta \bg_{k-1} + \left(1-\beta\right) \nabla_{\bw}J(\bw_{k}) \odot \nabla_{\bw}J(\bw_{k})
+$$
+
+Each weight is updated as 
+
+$$w_{i,k+1} = w_{i,k} - \frac{\mu}{\sqrt{g_{i,k}}+\varepsilon} \left[\nabla_{\bw}J(\bw_{k})\right]_i$$
+
+\end{frame}
+
+\begin{frame}{Adaptive Momentum Estimation (Adam)}
+
+It is a combination of the Momentum and the RMSProp optimizers. First, a velocity is computed as
+
+$$\bv_{k} = \beta_1\bv_{k-1} +(1-\beta_1) \nabla_{\bw} J(\bw_{k}) $$
+and then an average of the square norm of each component of the gradient
+$$\bg_k = \beta_2 \bg_{k-1} + \left(1-\beta_2\right) \nabla_{\bw}J(\bw_{k}) \odot \nabla_{\bw}J(\bw_{k})$$
+\end{frame}
+
+\begin{frame}{Adaptive Momentum Estimation (Adam)}
+
+Then, these  magnitudes are unbiased 
+\begin{equation}\nonumber
+    \begin{split}
+        \tilde{\bv}_k & = \frac{\bv_k}{1-\beta_1^{k}}\\
+        \tilde{\bg}_k & = \frac{\bg_k}{1-\beta_2^{k}}\\
+    \end{split}
+\end{equation}
+This is justified by seeing that the facts $\beta_1$ and $\beta_2$ produce a bias in the magnitudes.
+\end{frame}
+
+
+\begin{frame}{Adaptive Momentum Estimation (Adam)}
+
+Finally, each element of the weight vector $\bw_k$ is updated as 
+\begin{equation}\nonumber
+    w_{i,k+1} = w_{i,k} -\mu \frac{\hat{v}_{i,k}}{\sqrt{\hat{g}_{i,k}}+\varepsilon} 
+\end{equation}
+
+\vspace{1cm}
+
+\begin{multicols}{2}
+
+\includegraphics[scale=0.4]{Module 1 (NN)/pics/Adam.png}
+
+\columnbreak
+
+The authors of the algorithm suggest in (Kingma and J. Ba 2014)  to set  the parameters at values $\beta_1=0.9$,  $\beta_2=0.999$ and $\varepsilon = 10^{-8}$. The robustness of this choice is shown in a variety of experiments. However, in some circumstances, these values may need to be cross-validated.   
+
+\end{multicols}
+    
+\end{frame}
+
+\end{document}
+
